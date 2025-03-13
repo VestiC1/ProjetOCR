@@ -2,9 +2,6 @@ from PIL import Image
 import pytesseract
 import re
 
-
-
-
 # Spécifie le chemin de l'exécutable Tesseract
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'  # Mets le bon chemin ici
 
