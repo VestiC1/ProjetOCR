@@ -1,11 +1,18 @@
 import requests, json, os
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, text
+from sqlalchemy import URL, create_engine, text
 
 # Charger les variables d'environnement du fichier .env
 load_dotenv()
 
-POSTGRES_URI = os.getenv("POSTGRES_URI")
+# Création URL avec la fonction sqlalchemy :
+POSTGRES_URI = URL.create(
+    "postgresql",   
+    username = os.environ.get('USER'),
+    password = os.environ.get('PASSWORD'),
+    host     = os.environ.get('HOST'),
+    database = os.environ.get('NAME_DB')
+)
 
 engine = create_engine(POSTGRES_URI)
 conn = engine.connect()
