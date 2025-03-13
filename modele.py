@@ -18,9 +18,9 @@ POSTGRES_URI = URL.create(
 engine = create_engine(POSTGRES_URI)
 conn = engine.connect()
 
-def add_invoice(no, dt, total, mail):
+def add_factures(no, dt, total, mail):
     conn.execute(text(f"""
-INSERT INTO steve.invoice (numerofact, creationdate, total, mail)
+INSERT INTO steve.factures (numerofact, creationdate, total, mail)
     VALUES (:numero, :date, :total, :mail)
 ON conflict (numerofact) do update 
 set total=:total, mail=:mail;
