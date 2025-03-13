@@ -3,6 +3,7 @@ import cv2
 import os
 import re
 import pytesseract
+import modele
 from PIL import Image
 
 
@@ -68,8 +69,8 @@ def readqrcode(fn):
 
         print(INVOICE, nDATE, nCUST, birth, total, nom, mail, adresse)
 
-        model.add_clients(nom, mail, birth, nCUST, adresse)
-        model.add_invoice(INVOICE, nDATE, total, mail)
+        modele.add_clients(nom, mail, birth, nCUST, adresse)
+        modele.add_invoice(INVOICE, nDATE, total, mail)
 
     except:
         pass
