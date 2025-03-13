@@ -1,17 +1,16 @@
 from qreader import QReader
 import cv2
 import os
-import model
 import re
 import pytesseract
 from PIL import Image
 
 
-# Create a QReader instance
+# Créer une instance QReader
 qreader = QReader()
 
 def readqrcode(fn):
-    # Get the image that contains the QR code
+    # Récupérer l'image qui contient le code QR 
     image = cv2.cvtColor(cv2.imread(fn), cv2.COLOR_BGR2RGB)
 
     # Use the detect_and_decode function to get the decoded QR data

@@ -1,4 +1,4 @@
-import requests, json, os
+import os
 from dotenv import load_dotenv
 from sqlalchemy import URL, create_engine, text
 
@@ -7,11 +7,12 @@ load_dotenv()
 
 # Création URL avec la fonction sqlalchemy :
 POSTGRES_URI = URL.create(
-    "postgresql",   
-    username = os.environ.get('USER'),
-    password = os.environ.get('PASSWORD'),
-    host     = os.environ.get('HOST'),
-    database = os.environ.get('NAME_DB')
+    drivername = "postgresql+psycopg2",   
+    username   = os.environ.get('DB_USER'),
+    password   = os.environ.get('DB_PASSWORD'),
+    host       = os.environ.get('DB_HOST'),
+    port       = os.environ.get('DB_PORT', 5432),
+    database   = os.environ.get('DB_NAME')
 )
 
 engine = create_engine(POSTGRES_URI)
