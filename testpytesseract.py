@@ -15,12 +15,18 @@ x2, y2 = 500, 180  # Coin inférieur droit (x2, y2)
 # Découper la région 1 d'intérêt (ROI)
 zone1 = img.crop((x1, y1, x2, y2))
 
+# Shows the image in image viewer
+#zone1.show()
+
 # Définir les coordonnées de la région 2 à extraire
 x1, y1 = 0, 175  # Coin supérieur gauche (x1, y1)
 x2, y2 = 800, 800  # Coin inférieur droit (x2, y2)
 
 # Découper la région 2 d'intérêt (ROI)
 zone2 = img.crop((x1, y1, x2, y2))
+
+# Shows the image in image viewer
+#zone2.show()
 
 # Extraction du texte 1
 text1 = pytesseract.image_to_string(zone1, lang="eng", config="--psm 6 --oem 1")
