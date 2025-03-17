@@ -25,8 +25,11 @@ pip install -r requirements.txt
 python dlfact.py
 ```
 
-TEST :
+# Schéma de la base de données
 
+Voici le schéma de la base de données illustré avec Mermaid :
+
+```mermaid
 erDiagram
     CLIENTS {
         string mail PK
@@ -53,3 +56,4 @@ erDiagram
 
     CLIENTS ||--o{ FACTURES : "possède"
     FACTURES ||--o{ PRODUITS : "contient"
+```
