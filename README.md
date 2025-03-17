@@ -30,7 +30,7 @@ python dlfact.py
 Voici le schéma de la base de données illustré avec Mermaid :
 
 ```mermaid
-erDiagram
+erDiagram:
     CLIENTS {
         string mail PK
         string nom
