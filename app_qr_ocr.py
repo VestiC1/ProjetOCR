@@ -10,29 +10,29 @@ from PIL import Image
 # Créer une instance QReader
 qreader = QReader()
 
-def readqrcode(filename):
+def lecturedoc(nomdufichier):
     # Récupérer l'image qui contient le code QR 
-    image = cv2.cvtColor(cv2.imread(filename), cv2.COLOR_BGR2RGB)
+    image = cv2.cvtColor(cv2.imread(nomdufichier), cv2.COLOR_BGR2RGB)
 
     # Utilisez la fonction detect_and_decode pour obtenir les données QR décodées 
     decoded_text = qreader.detect_and_decode(image=image)
 
-    #print(decoded_text)
+    print(decoded_text)
 
     #decoded_split = decoded_text[0].split("\n")
 
     #print(decoded_split)
 
-    INVOICE = decoded_text[0][8:21]
-    nDATE = decoded_text[0][27:46]
-    nCUST = decoded_text[0][52:53]
-    birth = decoded_text[0][61:71]
+    nomfacture = decoded_text[0][8:21]
+    datefacture = decoded_text[0][27:46]
+    sexeclient = decoded_text[0][52:53]
+    datedenaissanceclient = decoded_text[0][61:71]
 
     # Spécifie le chemin de l'exécutable Tesseract
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'  # Mets le bon chemin ici
 
     # Ouvre l'image
-    img = Image.open(filename)
+    img = Image.open(nomdufichier)
 
     # Définir les coordonnées de la région 1 à extraire
     x1, y1 = 0, 0  # Coin supérieur gauche (x1, y1)
@@ -56,27 +56,27 @@ def readqrcode(filename):
 
     print(text1 ,text2)
 
-    nom = re.findall(r'Bill to \w+ \w+', text1)
-    mail = re.findall(r'Email [\w@.]+', text1)
-    adresse = re.findall(r'Address .*\n\n.*', text1)
-    total = re.findall(r'TOTAL [0-9.]*', text2)
+    nomclient = re.findall(r'Bill to \w+ \w+', text1)
+    mailclient = re.findall(r'Emailclient [\w@.]+', text1)
+    adresseclient = re.findall(r'Address .*\n\n.*', text1)
+    totalfacture = re.findall(r'TOTAL [0-9.]*', text2)
 
     try:
-        nom = nom[0][8:]
-        mail = mail[0][6:]
-        adresse = adresse[0][8:].replace("\n\n", " ")
-        total = float(total[0][6:])
+        nomclient = nomclient[0][8:]
+        mailclient = mailclient[0][6:]
+        adresseclient = adresseclient[0][8:].replace("\n\n", " ")
+        totalfacture = float(totalfacture[0][6:])
 
-        print(INVOICE, nDATE, nCUST, birth, total, nom, mail, adresse)
+        print(nomfacture, datefacture, sexeclient, datedenaissanceclient, totalfacture, nomclient, mailclient, adresseclient)
 
-        modele.add_clients(nom, mail, birth, nCUST, adresse)
-        modele.add_factures(INVOICE, nDATE, total, mail)
+        modele.add_clients(nomclient, mailclient, datedenaissanceclient, sexeclient, adresseclient)
+        modele.add_factures(nomfacture, datefacture, totalfacture, mailclient)
 
     except:
         pass
 
-listfichiers = os.listdir(r"C:\Users\steve\Documents\Formation IA\ProjetOCR\ProjetOCR\factures\2018")
+listefichiers = os.listdir(r"C:\Users\steve\Documents\Formation IA\ProjetOCR\ProjetOCR\factures\2018")
 #print(listfichiers)
 
-for filename in listfichiers:
-    readqrcode(r"C:\Users\steve\Documents\Formation IA\ProjetOCR\ProjetOCR\factures\2018\\" + filename)
+for nomdufichier in listefichiers:
+    lecturedoc(r"C:\Users\steve\Documents\Formation IA\ProjetOCR\ProjetOCR\factures\2018\\" + nomdufichier)
