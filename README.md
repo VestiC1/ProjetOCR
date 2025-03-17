@@ -24,3 +24,32 @@ pip install -r requirements.txt
 ```python
 python dlfact.py
 ```
+
+TEST :
+
+erDiagram
+    CLIENTS {
+        string mail PK
+        string nom
+        date datedenaissance
+        string sexe
+        string adresse
+    }
+    
+    FACTURES {
+        string numerofact PK
+        timestamp creationdate
+        float total
+        string mail FK
+    }
+
+    PRODUITS {
+        int id PK
+        string produit
+        int quantité
+        float "prix unitaire"
+        string numerofact FK
+    }
+
+    CLIENTS ||--o{ FACTURES : "possède"
+    FACTURES ||--o{ PRODUITS : "contient"
