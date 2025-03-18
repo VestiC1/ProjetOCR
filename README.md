@@ -1,19 +1,23 @@
 # ProjetOCR
+
 Développer une interface OCR
 
 ## Installation
 
 ### creation environnement
+
 ```python
 python -m venv ENV
 ```
 
 ### activation desactivation venv
+
 ```bash
 venv\Scripts\activate.bat 
 ```
 
 ### Installation librairies
+
 ```python
 pip install -r requirements.txt
 ```
@@ -21,6 +25,7 @@ pip install -r requirements.txt
 ## Services
 
 ### Telechargement de toutes les factures
+
 ```python
 python dlfact.py
 ```
@@ -30,7 +35,7 @@ python dlfact.py
 Voici le schéma de la base de données illustré avec Mermaid :
 
 ```mermaid
-erDiagram:
+erDiagram
     CLIENTS {
         string mail PK
         string nom
@@ -49,11 +54,12 @@ erDiagram:
     PRODUITS {
         int id PK
         string produit
-        int quantité
-        float "prix unitaire"
+        int quantite
+        float prix_unitaire
         string numerofact FK
     }
 
     CLIENTS ||--o{ FACTURES : "possède"
     FACTURES ||--o{ PRODUITS : "contient"
+     
 ```
