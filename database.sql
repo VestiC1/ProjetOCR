@@ -28,3 +28,19 @@ CREATE TABLE steve.factures (
 	CONSTRAINT factures_pk PRIMARY KEY (numerofact),
 	CONSTRAINT factures_clients_fk FOREIGN KEY (mail) REFERENCES steve.clients(mail)
 );
+
+-- steve.produits definition
+
+-- Drop table
+
+-- DROP TABLE steve.produits;
+
+CREATE TABLE steve.produits (
+	numerofact varchar(14) NULL,
+	produit varchar(60) NULL,
+	quantité int4 NULL,
+	"prix unitaire" float8 NULL,
+	id int4 NOT NULL,
+	CONSTRAINT produits_pk PRIMARY KEY (id),
+	CONSTRAINT produits_factures_fk FOREIGN KEY (numerofact) REFERENCES steve.factures(numerofact)
+);
