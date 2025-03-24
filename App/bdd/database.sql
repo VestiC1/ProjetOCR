@@ -35,11 +35,11 @@ CREATE TABLE steve.factures (
 
 -- DROP TABLE steve.produits;
 
-CREATE TABLE steve.produits (
+CREATE TABLE steve.factures_produits (
 	numerofact varchar(14) NULL,
 	produit varchar(60) NULL,
 	quantité int4 NULL,
-	"prix unitaire" float8 NULL,
+	prix_unitaire float8 NULL,
 	id int4 NOT NULL,
 	CONSTRAINT produits_pk PRIMARY KEY (id),
 	CONSTRAINT produits_factures_fk FOREIGN KEY (numerofact) REFERENCES steve.factures(numerofact)
