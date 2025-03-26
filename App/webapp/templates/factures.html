@@ -1,9 +1,25 @@
 {% extends "base.html" %}
+
 {% block title %}Factures{% endblock %}
+
 {% block content %}
-<h1>Liste des Factures</h1>
-<ul>
-    <li>Facture 1</li>
-    <li>Facture 2</li>
-</ul>
+<h2 class="text-center">Mes Factures</h2>
+<table class="table table-dark table-striped mt-4">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Montant</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>2025-03-25</td>
+            <td>100€</td>
+            <td><a href="#" class="btn btn-sm btn-primary">Voir</a></td>
+        </tr>
+    </tbody>
+</table>
 {% endblock %}

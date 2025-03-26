@@ -1,6 +1,15 @@
 {% extends "base.html" %}
+
 {% block title %}Accueil{% endblock %}
+
 {% block content %}
-<h1>Bienvenue sur l'application OCR</h1>
-<p>Veuillez vous connecter pour accéder aux fonctionnalités.</p>
+<div class="text-center">
+    <h1 class="mb-4">Bienvenue sur OCR App</h1>
+    <p>Scannez et gérez vos factures avec efficacité.</p>
+    {% if user %}
+        <a href="/factures" class="btn btn-custom">Voir mes factures</a>
+    {% else %}
+        <a href="/login" class="btn btn-success">Se connecter</a>
+    {% endif %}
+</div>
 {% endblock %}

@@ -1,9 +1,18 @@
 {% extends "base.html" %}
-{% block title %}Ajouter une facture{% endblock %}
+
+{% block title %}Ajouter une Facture{% endblock %}
+
 {% block content %}
-<h1>Ajouter une Facture</h1>
-<form action="/upload_invoice" method="post" enctype="multipart/form-data">
-    <input type="file" name="invoice" required>
-    <button type="submit">Ajouter</button>
+<h2 class="text-center">Ajouter une Facture</h2>
+<form method="post" class="mt-4">
+    <div class="mb-3">
+        <label for="date" class="form-label">Date</label>
+        <input type="date" class="form-control" id="date" name="date" required>
+    </div>
+    <div class="mb-3">
+        <label for="montant" class="form-label">Montant</label>
+        <input type="number" class="form-control" id="montant" name="montant" required>
+    </div>
+    <button type="submit" class="btn btn-custom w-100">Ajouter</button>
 </form>
 {% endblock %}
