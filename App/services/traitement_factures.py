@@ -93,6 +93,4 @@ def main():
     sauvegarde_erreurs()
     
 if __name__=="__main__":
-    #main()
-
-    pass
+    main()
