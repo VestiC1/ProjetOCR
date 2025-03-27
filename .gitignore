@@ -172,3 +172,4 @@ cython_debug/
 
 # Ajout pour projet OCR
 factures/
+factures_upload/
