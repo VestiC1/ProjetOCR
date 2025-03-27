@@ -121,7 +121,7 @@ async def upload_facture(
         texte_qr = extraction_texte_qrcode(data_qr)
         texte1 = extraction_texte_facture(data_z1)
         texte2 = extraction_texte_table(data_z2)
-        print(view_path)
+
         return templates.TemplateResponse("ajout_facture.html", {
             "request": request, 
             "user": user, 
