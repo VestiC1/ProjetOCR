@@ -6,13 +6,15 @@ from fastapi.staticfiles import StaticFiles
 import os
 import sys
 from pathlib import Path
-from pprint import pprint
 
 from App.services.outils import charger_image, pil_to_cv2
 from App.services.qr_code import extraction_qrcode
 from App.services.segmentation import segmenter_image
 from App.services.ocr import extraction_texte
 from App.services.parseur import extraction_texte_qrcode, extraction_texte_facture, extraction_texte_table
+
+from datetime import datetime
+import statistics
 
 app = FastAPI()
 
@@ -91,29 +93,26 @@ async def upload_facture(
     file: UploadFile = File(...), 
     user: str = Depends(login_required)
 ):
-    # Vérifier le type de fichier
+    start_time = datetime.now()  # Début du traitement
+
     if not file.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
+        logs_erreurs.append(f"{datetime.now()} - Erreur : Format non supporté ({file.filename})")
         return JSONResponse(status_code=400, content={"error": "Format de fichier non supporté"})
-    
-    # Créer un dossier pour la facture
+
     upload_dir = Path("factures_upload")
     upload_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Chemin complet du fichier
+
     file_path = upload_dir / file.filename
     view_path = f"/view_facture/{extract_year(file.filename)}/{file.filename}"
-    # Sauvegarder le fichier
+
     with open(file_path, "wb") as buffer:
         buffer.write(await file.read())
-    
+
     try:
-        # Charger et traiter l'image
         image = charger_image(nom_du_fichier=str(file_path))
         segments, rectangles = segmenter_image(image)
 
         zone1, zone2, zone3 = segments
-
-        # Extraction OCR et QR
         data_z1 = extraction_texte(zone1)
         data_z2 = extraction_texte(zone2)
         data_qr = extraction_qrcode(image=pil_to_cv2(zone3))
@@ -121,6 +120,16 @@ async def upload_facture(
         texte_qr = extraction_texte_qrcode(data_qr)
         texte1 = extraction_texte_facture(data_z1)
         texte2 = extraction_texte_table(data_z2)
+
+        temps_traitement = (datetime.now() - start_time).total_seconds()
+
+        # Ajouter la facture traitée
+        factures_importees.append({
+            "nom": file.filename,
+            "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "status": "OK",
+            "temps_traitement": temps_traitement
+        })
 
         return templates.TemplateResponse("ajout_facture.html", {
             "request": request, 
@@ -132,8 +141,42 @@ async def upload_facture(
         })
     
     except Exception as e:
+        logs_erreurs.append(f"{datetime.now()} - Erreur lors du traitement de {file.filename}: {str(e)}")
+
+        factures_importees.append({
+            "nom": file.filename,
+            "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "status": "Échec",
+            "temps_traitement": 0
+        })
+
         return templates.TemplateResponse("ajout_facture.html", {
             "request": request, 
             "user": user, 
             "error": f"Erreur de traitement : {str(e)}"
         })
+
+    
+# Stockage temporaire des données (à remplacer par une base de données)
+factures_importees = []
+logs_erreurs = []
+
+@app.get("/monitoring_data")
+async def get_monitoring_data():
+    if not factures_importees:
+        temps_moyen = "Pas encore de données"
+    else:
+        temps_moyen = round(statistics.mean([facture["temps_traitement"] for facture in factures_importees]), 2)
+
+    return {
+        "factures": factures_importees[-10:],  # Récupère les 10 dernières factures
+        "temps_moyen": temps_moyen,
+        "logs": logs_erreurs[-5:]  # Récupère les 5 derniers logs d'erreurs
+    }
+
+@app.post("/reset_monitoring")
+async def reset_monitoring(user: str = Depends(login_required)):
+    global factures_importees, logs_erreurs
+    factures_importees = []
+    logs_erreurs = []
+    return JSONResponse(status_code=200, content={"message": "Historique et logs réinitialisés"})

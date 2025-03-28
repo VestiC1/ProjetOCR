@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Monitoring des Factures</h2>
+    
+    <!-- Tableau des factures importées -->
+    <h4 class="mt-4">Dernières factures importées</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nom de la facture</th>
+                <th>Date d'importation</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody id="factures-table">
+            <!-- Les factures seront insérées ici dynamiquement -->
+        </tbody>
+    </table>
+
+    <!-- Temps de traitement moyen -->
+    <h4 class="mt-4">Temps de traitement moyen</h4>
+    <p id="temps-traitement">Calcul en cours...</p>
+
+    <!-- Logs d'erreurs -->
+    <h4 class="mt-4">Logs d'erreurs</h4>
+    <pre id="logs-erreurs" class="p-3 border rounded text-danger bg-dark" style="max-height: 200px; overflow-y: auto;">
+        Aucune erreur enregistrée.
+    </pre>
+</div>
+
+<button class="btn btn-danger mt-3" onclick="resetMonitoring()">Réinitialiser l'historique</button>
+
+<script>
+    async function resetMonitoring() {
+        const response = await fetch('/reset_monitoring', { method: 'POST' });
+        if (response.ok) {
+            alert("Historique et logs réinitialisés !");
+            fetchMonitoringData();  // Recharge les données après la réinitialisation
+        }
+    }
+</script>
+
+<script>
+    async function fetchMonitoringData() {
+        const response = await fetch('/monitoring_data');
+        const data = await response.json();
+        
+        // Mettre à jour le tableau des factures
+        const facturesTable = document.getElementById("factures-table");
+        facturesTable.innerHTML = "";
+        data.factures.forEach(facture => {
+            let row = `<tr>
+                <td>${facture.nom}</td>
+                <td>${facture.date}</td>
+                <td><span class="badge bg-${facture.status === 'OK' ? 'success' : facture.status === 'En cours' ? 'warning' : 'danger'}">
+                    ${facture.status}
+                </span></td>
+            </tr>`;
+            facturesTable.innerHTML += row;
+        });
+        
+        // Mettre à jour le temps de traitement moyen
+        document.getElementById("temps-traitement").textContent = `${data.temps_moyen} secondes`;
+        
+        // Mettre à jour les logs d'erreurs
+        document.getElementById("logs-erreurs").textContent = data.logs.length ? data.logs.join("\n") : "Aucune erreur enregistrée.";
+    }
+    
+    // Charger les données de monitoring au démarrage
+    fetchMonitoringData();
+</script>
+{% endblock %}
