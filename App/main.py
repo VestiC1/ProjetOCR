@@ -180,3 +180,33 @@ async def reset_monitoring(user: str = Depends(login_required)):
     factures_importees = []
     logs_erreurs = []
     return JSONResponse(status_code=200, content={"message": "Historique et logs réinitialisés"})
+
+@app.get("/dashboard")
+async def dashboard(request: Request, user: str = Depends(login_required)):
+    return templates.TemplateResponse("dashboard.html", {"request": request, "user": user})
+
+@app.get("/dashboard_data")
+async def dashboard_data():
+    total_factures = len(factures_importees)
+    total_erreurs = len(logs_erreurs)
+
+    # Calcul du temps moyen de traitement
+    if factures_importees:
+        temps_moyen = round(statistics.mean([facture["temps_traitement"] for facture in factures_importees]), 2)
+    else:
+        temps_moyen = 0
+
+    # Compter les statuts
+    statuts = {"OK": 0, "Échec": 0}
+    for facture in factures_importees:
+        if facture["status"] == "OK":
+            statuts["OK"] += 1
+        elif facture["status"] == "Échec":
+            statuts["Échec"] += 1
+
+    return JSONResponse(content={
+        "total_factures": total_factures,
+        "temps_moyen": temps_moyen,
+        "nb_erreurs": total_erreurs,
+        "statuts": statuts
+    })

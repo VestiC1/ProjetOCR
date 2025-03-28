@@ -1,0 +1,80 @@
+{% extends "base.html" %}  
+
+{% block content %} 
+<div class="container mt-4">     
+    <h2>Dashboard</h2>      
+    <div class="row">         
+        <!-- Nombre total de factures -->         
+        <div class="col-md-3">             
+            <div class="card text-white bg-primary mb-3">                 
+                <div class="card-body">                     
+                    <h5 class="card-title">Factures Traitées</h5>                     
+                    <p class="card-text" id="total-factures">0</p>                 
+                </div>             
+            </div>         
+        </div>          
+        
+        <!-- Temps de traitement moyen -->         
+        <div class="col-md-3">             
+            <div class="card text-white bg-success mb-3">                 
+                <div class="card-body">                     
+                    <h5 class="card-title">Temps Moyen</h5>                     
+                    <p class="card-text" id="temps-traitement">0 sec</p>                 
+                </div>             
+            </div>         
+        </div>          
+        
+        <!-- Nombre d'erreurs -->         
+        <div class="col-md-3">             
+            <div class="card text-white bg-danger mb-3">                 
+                <div class="card-body">                     
+                    <h5 class="card-title">Erreurs</h5>                     
+                    <p class="card-text" id="nombre-erreurs">0</p>                 
+                </div>             
+            </div>         
+        </div>     
+    </div>      
+    
+    <!-- Graphique des statuts -->     
+    <h4 class="mt-4">Répartition des statuts des factures</h4>     
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <canvas id="statutChart"></canvas>
+        </div>
+    </div>
+</div>  
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+<script>     
+    async function fetchDashboardData() {         
+        const response = await fetch('/dashboard_data');         
+        const data = await response.json();          
+        
+        document.getElementById("total-factures").textContent = data.total_factures;         
+        document.getElementById("temps-traitement").textContent = data.temps_moyen + " sec";         
+        document.getElementById("nombre-erreurs").textContent = data.nb_erreurs;          
+        
+        // Graphique des statuts         
+        const ctx = document.getElementById('statutChart').getContext('2d');         
+        new Chart(ctx, {             
+            type: 'doughnut',             
+            data: {                 
+                labels: ['OK', 'Échec'],                 
+                datasets: [{                     
+                    data: [data.statuts.OK, data.statuts.Échec],                     
+                    backgroundColor: ['green', 'red']                 
+                }]             
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                layout: {
+                    padding: 20
+                }
+            }         
+        });     
+    }      
+    
+    fetchDashboardData(); 
+</script> 
+{% endblock %}
