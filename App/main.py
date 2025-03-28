@@ -30,8 +30,6 @@ fake_users_db = {"admin": "password"}
 session = {"user": None}
 
 def login_required(request: Request):
-    if not session["user"]:
-        raise HTTPException(status_code=403, detail="Vous devez être connecté pour accéder à cette page.")
     return session["user"]
 
 @app.get("/")
@@ -56,14 +54,20 @@ async def logout():
 
 @app.get("/factures")
 async def view_factures(request: Request, user: str = Depends(login_required)):
+    if not session["user"]:
+        return templates.TemplateResponse("acces_refuse.html", {"request": request})
     return templates.TemplateResponse("factures.html", {"request": request, "user": user})
 
 @app.get("/ajout_facture")
 async def add_facture(request: Request, user: str = Depends(login_required)):
+    if not session["user"]:
+        return templates.TemplateResponse("acces_refuse.html", {"request": request})
     return templates.TemplateResponse("ajout_facture.html", {"request": request, "user": user})
 
 @app.get("/monitoring")
 async def monitoring(request: Request, user: str = Depends(login_required)):
+    if not session["user"]:
+        return templates.TemplateResponse("acces_refuse.html", {"request": request})
     return templates.TemplateResponse("monitoring.html", {"request": request, "user": user})
 
 # Route pour récupérer la liste des factures
@@ -74,7 +78,6 @@ async def list_factures():
         if year_folder.is_dir():
             factures[year_folder.name] = [f.name for f in year_folder.iterdir() if f.suffix == ".png"]
     return factures
-
 
 # Route pour afficher une facture sélectionnée
 @app.get("/view_facture/{year}/{filename}")
@@ -183,6 +186,8 @@ async def reset_monitoring(user: str = Depends(login_required)):
 
 @app.get("/dashboard")
 async def dashboard(request: Request, user: str = Depends(login_required)):
+    if not session["user"]:
+        return templates.TemplateResponse("acces_refuse.html", {"request": request})
     return templates.TemplateResponse("dashboard.html", {"request": request, "user": user})
 
 @app.get("/dashboard_data")
