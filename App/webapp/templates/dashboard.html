@@ -14,12 +14,12 @@
             </div>         
         </div>          
         
-        <!-- Temps de traitement moyen -->         
+        <!-- Taux de Succès -->         
         <div class="col-md-3">             
             <div class="card text-white bg-success mb-3">                 
                 <div class="card-body">                     
-                    <h5 class="card-title">Temps Moyen</h5>                     
-                    <p class="card-text" id="temps-traitement">0 sec</p>                 
+                    <h5 class="card-title">Taux de Succès</h5>                     
+                    <p class="card-text" id="taux-succes">0%</p>                 
                 </div>             
             </div>         
         </div>          
@@ -51,7 +51,7 @@
         const data = await response.json();          
         
         document.getElementById("total-factures").textContent = data.total_factures;         
-        document.getElementById("temps-traitement").textContent = data.temps_moyen + " sec";         
+        document.getElementById("taux-succes").textContent = data.taux_succes + "%";         
         document.getElementById("nombre-erreurs").textContent = data.nb_erreurs;          
         
         // Graphique des statuts         

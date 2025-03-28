@@ -195,11 +195,11 @@ async def dashboard_data():
     total_factures = len(factures_importees)
     total_erreurs = len(logs_erreurs)
 
-    # Calcul du temps moyen de traitement
-    if factures_importees:
-        temps_moyen = round(statistics.mean([facture["temps_traitement"] for facture in factures_importees]), 2)
+    # Calculate success rate
+    if total_factures > 0:
+        success_rate = round((total_factures - total_erreurs) / total_factures * 100, 2)
     else:
-        temps_moyen = 0
+        success_rate = 0
 
     # Compter les statuts
     statuts = {"OK": 0, "Échec": 0}
@@ -211,7 +211,7 @@ async def dashboard_data():
 
     return JSONResponse(content={
         "total_factures": total_factures,
-        "temps_moyen": temps_moyen,
+        "taux_succes": success_rate,
         "nb_erreurs": total_erreurs,
         "statuts": statuts
     })
