@@ -30,7 +30,9 @@ pip install -r requirements.txt
 python dlfact.py
 ```
 
-# Schéma de la base de données
+## Les schémas
+
+### Schéma de la base de données
 
 Voici le schéma de la base de données illustré avec Mermaid :
 
@@ -65,7 +67,7 @@ erDiagram
 
 ```
 
-# Schéma conceptuel
+### Schéma conceptuel
 
 Voici le schéma conceptuel illustré avec Mermaid :
 
@@ -91,7 +93,7 @@ FUNC6[**Injection BDD** <br> *modele.py*]
 
 ```
 
-# Schéma fonctionnel
+### Schéma fonctionnel
 
 Voici le schéma fonctionnel illustré avec Mermaid :
 
@@ -129,3 +131,12 @@ FUNC12[**Table** <br> *factures_produits*]
 	FUNC9--add_factures_produits-->FUNC12
 
 ```
+
+## Application web
+
+### lancement de l'application ( dossier App )
+
+```python
+uvicorn main:app --reload
+```
+
